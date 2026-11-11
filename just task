@@ -1,0 +1,31 @@
+create table Student(
+    s_id number(5) primary key,
+    s_name varchar(20) NOT NULL,
+    phone number(11) UNIQUE,
+    age number(2) CHECK (age between 15 and 30)
+);
+create table Course
+(
+    code varchar(6),
+    title varchar(10),
+    credit number(1) check(credit in (3,1)),
+    primary key(code)
+);
+create table Enroll
+(
+    student_id number(5),
+    course_code varchar(6),
+    grade varchar(2),
+    primary key(student_id, course_code),
+    foreign key(student_id) references Student(s_id),
+    foreign key(course_code) references Course(code)
+);
+
+desc Student;
+
+INSERT INTO Student VALUES(1, 'Ahad bot', '00069955', 22);
+
+INSERT INTO Student VALUES(2, 'Istiack', '018293335', 20);
+
+select * from Student; 
+--full table er jnno
