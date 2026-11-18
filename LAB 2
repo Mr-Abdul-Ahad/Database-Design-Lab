@@ -1,1 +1,50 @@
+create table student
+(
+  s_id number(5) Primary Key,
+  s_name varchar(40) NOT NULL,
+  batch number(2),
+  age number(2) constraint checkage CHECK(age between 20 and 40),
+  phone number(11) UNIQUE,
+  gender varchar(10) CHECK(gender in ('Male','Female'))
+);
+--rename table
+alter table student rename to Student_Info;
+desc student_info;
 
+--rename column
+alter table student_info rename column batch to s_batch;
+desc student_info;
+
+-- data type change 
+alter table student_info modify s_batch number(3);
+desc student_info;
+
+-- add new column 
+alter table student_info add email varchar(40);
+desc student_info;
+
+--delete
+--alter table student_info drop column email;
+--desc student_info;
+
+
+--add new constraint 
+alter table student_info add constraint u_email unique(email);
+
+alter table student_info  drop constraint checkage;
+insert into student_info values(1,'Abdul Ahad',67,60,01820065599,'Male','38ahad2004@gmail.com');
+insert into student_info values(2,'pakhi',67,21,01450065599,'Female','38abdul2004@gmail.com');
+
+set linesize 1000
+select * from student_info;
+
+--jodi sudhu specific kichu dekhte chai
+select s_id,phone from student_info;
+
+--specific ekjoner phone number dekhar jnno
+select phone from student_info
+ where s_id=1;
+
+ --Find email of all female students
+ select email from student_info
+ where gender='Female';
