@@ -1,1 +1,98 @@
+set linesize 1500
+create table Student
+(
+  s_id number(5) primary key,
+  s_name varchar(10) NOT NULL,
+  batch number(2),
+  age number(2) CHECK (age between 20 and 40),
+  phone number(11) UNIQUE
+);
 
+create table Course
+(
+  course_code varchar(6) primary key,
+  title varchar(20) UNIQUE,
+  credit number(1) CHECK (credit in (3, 1))
+);
+
+create table Enroll
+(
+  student_id number(5),
+  course_code varchar(6),
+  marks number(3) NOT NULL,
+  grade varchar(2) CHECK (grade in
+  ('A+', 'A', 'A-', 'B+', 'B-', 'B', 'C+', 'C', 'D', 'F')),
+  foreign key (student_id) references Student(s_id),
+  foreign key (course_code) references Course(course_code),
+  primary key (student_id, course_code)
+);
+
+insert into Student values (1, 'Rahim', 65, 21, 0188888);
+insert into Student values (2, 'Karim', 65, 22, 0188880);
+insert into Student values (3, 'Nila', 66, 23, 0188889);
+
+insert into Course values ('CSE383', 'Database Design', 3);
+insert into Course values ('CSE384', 'Database Design Lab', 1);
+
+insert into Enroll values (1, 'CSE383', 80, 'A+');
+insert into Enroll values (1, 'CSE384', 65, NULL);
+
+-- and or not
+
+select* from Student where batch=65 and age>21;
+select* from Student where batch=65 or age>21;
+select* from Student where not batch=65 ;
+
+
+
+--between-and
+
+select * from student where age between 20 and 22;
+
+--in
+select * from student where age=20 or age=21 or age=22;
+select * from student where age in(20,21,22);
+
+
+--like
+-- like diye string matching kore 
+--% diye multiple character 
+-- __ underscore diye single characterr
+
+select * from student where s_name like'R%';
+
+select* from student where s_name like '%m';  
+select* from student where s_name like '%a%';  
+select* from student where s_name like 'N%a';  
+select* from student where s_name like '_____';
+
+
+
+--is null
+select * from Enroll where grade is null;
+
+
+--nested queries
+--find id of students who have enrolled in 'Database Design' course.
+select student_id from Enroll where course_code =(select course_code from course where title='Database Design');
+
+-- find names of student who have enrolled in "database design "course and got a+
+
+select s_name from Student where s_id IN(select student_id from Enroll where grade='A+'and course_code=(select course_code from course where title='Database Design'));
+
+--union intersect minus
+
+select s_id from student  union select student_id from enroll;
+select s_id from student  intersect select student_id from enroll;
+select s_id from student  minus select student_id from enroll;
+select s_id from student  except select student_id from enroll;
+select s_id from student  union all select student_id from enroll;
+
+--1. Display the name and phone of all students.
+--2. Display the phone of students, leaving out NULL.
+--3. Show the students aged 21 to 23.
+--4. Show all courses with more than 1.5 credits.
+--5. Show the students whose name contains the letter m (any case).
+--6. Show the enrollments with marks below 50 or with no marks at all.
+--8. Add a column department VARCHAR2(10) to courses, give it a CHECK constraint allowing only
+--  'CSE' or 'MAT', then drop the column.
